@@ -31,3 +31,23 @@ produces the following [JSON](resources/snippet.json):
 ```
 
 A more complete sample is available in the resources folder: [sample.dfm](resources/sample.dfm) -> [sample.json](resources/sample.json).
+
+## Building from source
+
+### Requirements
+- [git](https://git-scm.com/)
+- [stack](https://docs.haskellstack.org)
+
+### Commands
+```bash
+$ git clone https://github.com/jean-lopes/dfm-to-json.git
+$ cd dfm-to-json
+$ stack install
+$ dfm-to-json --version
+```
+
+If you can't execute the last command, it means you don't have the default `stack install` directory in your environment `PATH` variable. check [local-bin-path](https://docs.haskellstack.org/en/v1.5.1/yaml_configuration/#local-bin-path)
+
+Tip for windows users: default `stack` local-bin-path is: `%APPDATA%\local\bin`
+
+
