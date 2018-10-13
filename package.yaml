@@ -1,10 +1,10 @@
-name:                dfm-parser
-version:             0.1.0.0
-github:              "githubuser/dfm-parser"
+name:                dfm-to-json
+version:             0.0.0.1
+github:              "jean-lopes/dfm-to-json"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2018 Author name here"
+author:              "Jean Carlo Giambastiani Lopes"
+maintainer:          "author[0] `dot` author[3] `at` hotmail `dot` com `dot` br"
+copyright:           "2018 Jean Carlo Giambastiani Lopes"
 
 extra-source-files:
 - README.md
@@ -17,19 +17,24 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/dfm-parser#readme>
+description:         Please see the README on GitHub at <https://github.com/jean-lopes/dfm-to-json#readme>
 
 dependencies:
 - base >= 4.7 && < 5
 - megaparsec
 - parser-combinators
 - text
+- aeson
+- aeson-pretty
+- bytestring
+- optparse-simple
+- filepath
 
 library:
   source-dirs: src
 
 executables:
-  dfm-parser-exe:
+  dfm-to-json:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -37,15 +42,4 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - dfm-parser
-
-tests:
-  dfm-parser-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - dfm-parser
+    - dfm-to-json

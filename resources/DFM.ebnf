@@ -1,0 +1,80 @@
+dfm = object;
+
+object = 'object', name, ':', type-name, properties, { object }, 'end';
+
+items = item, { item };
+
+item = name, properties, 'end';
+
+properties = property, { property };
+
+property = qualified-name, '=', value;
+
+comma-values = value, { ',', value };
+
+plus-values = value, { [ '+' ], value };
+
+values = value, { value };
+
+value
+  = 'true'
+  | 'false'
+  | integer
+  | double
+  | string
+  | qualified-name
+  | '[', [ comma-values ], ']'
+  | '(', plus-values, ')'
+  | '{', values, '}'
+  | '<', items, '>'
+  ;
+
+type-name = name;
+
+qualified-name = name, [ '.', name ];
+
+name = (letter | '_'), (alphanumeric | '_');
+
+string = single-string, { single-string };
+
+single-string = literal-string | control-string;
+
+literal-string = "'", { literal-string-char } , "'";
+
+literal-string-char = "''" | any-char - "'";
+
+control-string = control-char, { control-char };
+
+control-char = '#', natural;
+
+double = int, [ '.', natural ], [ 'e', int ];
+
+integer = int | hex;
+
+int = [ sign ], natural;
+
+sign = '+' | '-';
+
+natural = digit, { digit };
+
+hex = '$', hex-digit, { hex-digit };
+
+alphanumeric = digit | letter;
+
+letter
+    = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' 
+    | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' 
+    | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' ;
+hex-digit
+    = '0' | '1' | '2' | '3' 
+    | '4' | '5' | '6' | '7' 
+    | '8' | '9' | 'a' | 'b' 
+    | 'c' | 'd' | 'e' | 'f'
+    ;
+
+digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' ;
+
+any-char = ? any ASCII character (0-255) ?;
+
+
+keywords = 'object' | 'end' | 'true' | 'false';

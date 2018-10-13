@@ -1,0 +1,4 @@
+:set prompt "\955 "
+:set +t
+:set +s
+:set -XOverloadedStrings
