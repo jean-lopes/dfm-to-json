@@ -31,12 +31,13 @@ object Form1: TForm1
     Height = 73
     Color = 8454143
     ItemHeight = 13
-    Items.Strings = (
-      'Felix COLIBRI Delphi Training Sessions:'
-      '    +  UML and Design Patterns'
-      '    +  Interbase Applications'
-      '    +  Object Oriented Programming'
-      '    +  Client Server Database')
+    Items.Strings = 
+      ( 'this is string.' 
+      + 'and another one...'
+      + 'and another one...'
+      + 'now with apostrophe '''#13#10
+      + 'even with control characters '#7#9'mixed in the string'
+      )
     TabOrder = 1
   end
   object DBGrid1: TDBGrid

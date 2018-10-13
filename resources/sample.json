@@ -43,7 +43,11 @@
         "itemheight": 13,
         "top": 8,
         "items.strings": [
-          "Felix COLIBRI Delphi Training Sessions:+  UML and Design Patterns+  Interbase Applications+  Object Oriented Programming+  Client Server Database"
+          "this is string.",
+          "and another one...",
+          "and another one...",
+          "now with apostrophe '\r\n",
+          "even with control characters \u0007\tmixed in the string"
         ]
       },
       "objects": []

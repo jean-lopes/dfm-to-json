@@ -64,8 +64,6 @@ main = do
       fileName = dropExtension $ takeFileName dfmPath
       jsonFileName = fileName <.> "json"
       jsonPath = replaceFileName dfmPath jsonFileName
-  print dfmPath
-  print jsonPath
   src <- Text.readFile dfmPath 
   case parseDFM dfmPath src of
     Left msg -> putStrLn msg
