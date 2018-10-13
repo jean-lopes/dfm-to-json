@@ -2,6 +2,8 @@
 
 Convert a DFM to JSON, for more information issue --help command
 
+You can download the binary from the [release](https://github.com/jean-lopes/dfm-to-json/releases) page.
+
 Consider this DFM [snippet](resources/snippet.dfm):
 ```pascal
 object Form1: TForm1
