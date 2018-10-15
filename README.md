@@ -2,7 +2,7 @@
 
 Convert a DFM to JSON, for more information issue --help command
 
-You can download the [lastest release here](https://github.com/jean-lopes/dfm-to-json/releases/latest).
+You can download the [latest release here](https://github.com/jean-lopes/dfm-to-json/releases/latest).
 
 You can check the EBNF [here](https://jean-lopes.github.io/dfm-to-json/).
 
