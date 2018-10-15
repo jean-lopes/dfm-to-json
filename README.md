@@ -6,7 +6,7 @@ You can download the [lastest release here](https://github.com/jean-lopes/dfm-to
 
 You can check the EBNF [here](https://jean-lopes.github.io/dfm-to-json/).
 
-Consider this DFM [snippet](resources/snippet.dfm):
+Consider this DFM [resources/snippet.dfm](resources/snippet.dfm):
 ```pascal
 object Form1: TForm1
   Left = 192
@@ -19,7 +19,7 @@ Executing the command:
 ```bash
 $ dfm-to-json resources/snippet.dfm
 ```
-produces the following [JSON](resources/snippet.json):
+produces the following [resources/snippet.json](resources/snippet.json):
 ```json
 {
   "name": "Form1",
@@ -34,7 +34,7 @@ produces the following [JSON](resources/snippet.json):
 }
 ```
 
-A more complete sample is available in the resources folder: [sample.dfm](resources/sample.dfm) -> [sample.json](resources/sample.json).
+A more complete sample is available in the resources folder: [resources/sample.dfm](resources/sample.dfm) -> [resources/sample.json](resources/sample.json).
 
 ## Building from source
 
