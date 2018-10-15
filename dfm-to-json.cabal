@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d288098e23e6a6c651b4b3990a736290db98720325fb12eecadde6e4220060fa
+-- hash: 297dba08511251c961269e55dc4ddd7f29d4083ff84b3a6c1e49583726fc798f
 
 name:           dfm-to-json
-version:        0.0.0.1
+version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/jean-lopes/dfm-to-json#readme>
 homepage:       https://github.com/jean-lopes/dfm-to-json#readme
 bug-reports:    https://github.com/jean-lopes/dfm-to-json/issues
@@ -37,6 +37,7 @@ library
     , aeson-pretty
     , base >=4.7 && <5
     , bytestring
+    , directory
     , filepath
     , megaparsec
     , optparse-simple
@@ -50,13 +51,14 @@ executable dfm-to-json
       Paths_dfm_to_json
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -O2 -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , aeson-pretty
     , base >=4.7 && <5
     , bytestring
     , dfm-to-json
+    , directory
     , filepath
     , megaparsec
     , optparse-simple

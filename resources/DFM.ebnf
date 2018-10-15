@@ -1,8 +1,6 @@
-dfm = object;
+dfm = ? file-path ?, object;
 
-object = 'object', name, ':', type-name, properties, { object }, 'end';
-
-items = item, { item };
+object = object-kind, name, [ ':', type-name ], { property }, { object }, 'end';
 
 item = name, properties, 'end';
 
@@ -16,6 +14,10 @@ plus-values = value, { [ '+' ], value };
 
 values = value, { value };
 
+type-name = name, [ '[', natural, ']' ];
+
+object-kind = 'inherited' | 'inline' | 'object' ;
+
 value
   = 'true'
   | 'false'
@@ -24,14 +26,12 @@ value
   | string
   | qualified-name
   | '[', [ comma-values ], ']'
-  | '(', plus-values, ')'
+  | '(', [ plus-values ], ')'
   | '{', values, '}'
-  | '<', items, '>'
+  | '<', { item }, '>'
   ;
 
-type-name = name;
-
-qualified-name = name, [ '.', name ];
+qualified-name = name, { '.', name };
 
 name = (letter | '_'), (alphanumeric | '_');
 
@@ -75,6 +75,5 @@ hex-digit
 digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' ;
 
 any-char = ? any ASCII character (0-255) ?;
-
 
 keywords = 'object' | 'end' | 'true' | 'false';

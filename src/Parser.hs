@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Parser
+module Parser ( parseDFM )
 where
 import qualified AST
 import           Control.Monad (void)
 import qualified Control.Monad.Combinators.NonEmpty as NonEmpty
 import           Data.Char (chr, isHexDigit)
+import qualified Data.List.NonEmpty as NonEmpty
 import           Data.List.NonEmpty (NonEmpty(..))
-import           Data.Semigroup (sconcat)
 import qualified Data.Text as Text
 import           Data.Text (Text)
 import           Data.Void (Void)
@@ -18,7 +18,7 @@ import qualified Text.Megaparsec.Char.Lexer as Lexer
 type Parser = Parsec Void Text
 
 reserved :: [Text]
-reserved = [ "object", "end", "true", "false" ]
+reserved = [ "inherited", "inline", "object", "end", "true", "false" ]
 
 whitespace :: Parser ()
 whitespace = Lexer.space spaceConsumer singleLineComment multilineComment
@@ -43,14 +43,14 @@ name = (lexeme . try) (ident >>= check)
     other = Text.pack <$> many (char '_' <|> alphaNumChar)
     ident = Text.cons <$> first <*> other
     check x = if x `elem` reserved
-      then fail $ "keyword " ++ show x ++ "cannot be an identifier"
+      then fail $ "keyword " ++ show x ++ " cannot be an identifier"
       else return x
 
 qualifiedName :: Parser Text
 qualifiedName = Text.append <$> name <*> option "" xs
   where
     dot = lexeme $ char '.'
-    xs = Text.cons <$> dot <*> name
+    xs = Text.concat <$> (many $ Text.cons <$> dot <*> name)
 
 true :: Parser Bool
 true = True <$ symbol' "true"
@@ -91,11 +91,8 @@ integer = lexeme $ hex <|> read <$> int
 double :: Parser Double
 double = lexeme $ read <$> dbl
 
-closed :: Char -> Parser a -> Char -> Parser a
-closed o p c = open *> p <* close
-  where
-    open = lexeme $ char' o
-    close = lexeme $ char' c
+closed :: Parser open -> Parser p -> Parser close -> Parser p
+closed open p close = open *> p <* close
 
 ctlChr :: Parser Char
 ctlChr = lexeme $ chr <$ symbol "#" <*> natural
@@ -104,16 +101,20 @@ ctlStr :: Parser Text
 ctlStr = Text.pack <$> some ctlChr
 
 litChr :: Parser Char
-litChr = satisfy (/='\'') <|> symbol "''" *> pure '\''
+litChr = satisfy (/='\'') <|> string "''" *> pure '\''
 
 litStr :: Parser Text
-litStr = lexeme $ Text.pack <$> closed '\'' (many litChr) '\''
+litStr = lexeme $ Text.pack <$> closed (char '\'') (many litChr) (char '\'')
 
 sglStr :: Parser Text
 sglStr = ctlStr <|> litStr
 
 str :: Parser Text
-str = Text.concat <$> some sglStr
+str = Text.concat . NonEmpty.toList <$> values
+  where
+    s = Text.concat <$> some sglStr
+    values = s `NonEmpty.sepBy1` plus
+    plus = symbol "+"
 
 image :: Parser AST.Value
 image = AST.Image . Text.concat <$> (some . lexeme) p
@@ -121,32 +122,30 @@ image = AST.Image . Text.concat <$> (some . lexeme) p
     p = takeWhile1P (Just "image data") isHexDigit
 
 squareBracket :: Parser AST.Value
-squareBracket = AST.SquareBracket <$> closed '[' values ']'
+squareBracket = AST.SquareBracket <$> closed (symbol "[") values (symbol "]")
   where
     values = value `sepBy`comma
     comma = symbol ","
 
 roundBracket :: Parser AST.Value
-roundBracket = AST.RoundBracket <$> closed '(' values ')'
+roundBracket = AST.RoundBracket <$> closed (symbol "(") values (symbol ")")
   where
-    values = value `NonEmpty.sepBy1` plus
+    values = value `sepBy` plus
     plus = symbol "+"
 
 curlyBracket :: Parser AST.Value
-curlyBracket = closed '{' (try image <|> values) '}'
+curlyBracket = closed (symbol "{") (try image <|> values) (symbol "}")
   where
     values = AST.CurlyBracket <$> NonEmpty.some value
 
 angleBracket :: Parser AST.Value
-angleBracket = AST.AngleBracket <$> closed '<' items '>'
-  where
-    items = NonEmpty.some item
+angleBracket = AST.AngleBracket <$> closed (symbol "<") (many item) (symbol ">")
 
 value :: Parser AST.Value
 value
   =   AST.Boolean <$> boolean
-  <|> AST.Integer <$> integer
   <|> AST.Double <$> double
+  <|> AST.Integer <$> integer
   <|> AST.String <$> str
   <|> AST.Name <$> qualifiedName
   <|> squareBracket
@@ -165,21 +164,31 @@ properties = (:|) <$> property <*> many property
 item :: Parser AST.Item
 item = AST.Item <$> name <*> properties <* symbol' "end"
 
+typ :: Parser (Text, Maybe Int)
+typ = lexeme $ do
+  void $ symbol ":"
+  n <- name  
+  i <- optional $ closed (symbol "[") integer (symbol "]")
+  return (n, i)
+
 object :: Parser AST.Object
 object
   =   AST.Object 
-  <$  symbol' "object" 
+  <$> (symbol' "object" <|> symbol' "inherited" <|> symbol' "inline")
   <*> name 
-  <*  symbol ":" 
-  <*> name 
-  <*> properties 
+  <*> optional typ
+  <*> many property 
   <*> many object 
   <*  symbol' "end"
 
-dfm :: Parser AST.Object
-dfm = whitespace *> object <* eof
+dfm :: FilePath -> Parser AST.DFM
+dfm fileName = AST.DFM <$> pure fileName <*> object
 
-parseDFM :: String -> Text -> Either String AST.Object
-parseDFM fileName source = case parse dfm fileName source of 
-  Left err -> Left $ parseErrorPretty err
-  Right ast -> Right $ ast
+parseFile :: Parser p -> Parser p
+parseFile p = whitespace *> p <* eof
+
+parseDFM :: FilePath -> Text -> Either Text AST.DFM
+parseDFM fileName source
+  = case parse (parseFile $ dfm fileName) fileName source of 
+    Left  err -> Left . Text.pack $ parseErrorPretty err
+    Right ast -> Right $ ast

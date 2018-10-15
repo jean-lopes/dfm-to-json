@@ -1,5 +1,5 @@
 name:                dfm-to-json
-version:             0.0.0.1
+version:             0.1.0.0
 github:              "jean-lopes/dfm-to-json"
 license:             BSD3
 author:              "Jean Carlo Giambastiani Lopes"
@@ -29,6 +29,7 @@ dependencies:
 - bytestring
 - optparse-simple
 - filepath
+- directory
 
 library:
   source-dirs: src
@@ -38,6 +39,11 @@ executables:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
+    - -Wall
+    - -fwarn-tabs
+    - -fwarn-incomplete-uni-patterns
+    - -fwarn-incomplete-record-updates
+    - -O2
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
