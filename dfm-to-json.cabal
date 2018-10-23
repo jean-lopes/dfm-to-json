@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4a336a849e97d4674fc164a8886989aa6a7703037deb7fc11b3e530bbc2ed85a
+-- hash: 41bb6c0a3549d8948f359c232a9f521f39eaf3b54ca068678df36e3d440ce6ba
 
 name:           dfm-to-json
-version:        0.1.0.0
+version:        0.1.1.0
 description:    Please see the README on GitHub at <https://github.com/jean-lopes/dfm-to-json#readme>
 homepage:       https://github.com/jean-lopes/dfm-to-json#readme
 bug-reports:    https://github.com/jean-lopes/dfm-to-json/issues
