@@ -48,7 +48,7 @@ Executing the command:
 $ dfm-to-json resources/sample.dfm
 ```
 
-produces the following [JSON](resources/sample.dfm):
+produces the following [JSON](resources/sample.json):
 
 ```json
 object Form1: TForm1
