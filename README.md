@@ -2,9 +2,15 @@
 
 Convert a DFM to JSON, for more information issue --help command
 
-You can download the binary from the [release](https://github.com/jean-lopes/dfm-to-json/releases) page.
+You can download the [latest release here](https://github.com/jean-lopes/dfm-to-json/releases/latest).
 
+<<<<<<< HEAD
 Consider this DFM [sample.dfm](resources/sample.dfm):
+=======
+You can check the grammar (EBNF) [here](https://jean-lopes.github.io/dfm-to-json/).
+
+Consider this DFM [resources/snippet.dfm](resources/snippet.dfm):
+>>>>>>> 8c2892899d8c344625981d90401a1b48f981e96b
 ```pascal
 object Form1: TForm1
   Left = 192
@@ -43,7 +49,11 @@ Executing the command:
 ```bash
 $ dfm-to-json resources/sample.dfm
 ```
+<<<<<<< HEAD
 produces the following [JSON](resources/sample.dfm):
+=======
+produces the following [resources/snippet.json](resources/snippet.json):
+>>>>>>> 8c2892899d8c344625981d90401a1b48f981e96b
 ```json
 object Form1: TForm1
   Left = 192
