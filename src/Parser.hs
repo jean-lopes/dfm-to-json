@@ -2,18 +2,18 @@
 module Parser ( parseDFM )
 where
 import qualified AST
-import           Control.Monad (void)
+import           Control.Monad                      (void)
 import qualified Control.Monad.Combinators.NonEmpty as NonEmpty
-import           Data.Char (chr, isHexDigit)
-import qualified Data.List.NonEmpty as NonEmpty
-import           Data.List.NonEmpty (NonEmpty(..))
-import qualified Data.Text as Text
-import           Data.Text (Text)
-import           Data.Void (Void)
+import           Data.Char                          (chr, isHexDigit)
+import           Data.List.NonEmpty                 (NonEmpty (..))
+import qualified Data.List.NonEmpty                 as NonEmpty
+import           Data.Text                          (Text)
+import qualified Data.Text                          as Text
+import           Data.Void                          (Void)
 import qualified Numeric
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as Lexer
+import qualified Text.Megaparsec.Char.Lexer         as Lexer
 
 type Parser = Parsec Void Text
 
@@ -22,7 +22,7 @@ reserved = [ "inherited", "inline", "object", "end", "true", "false" ]
 
 whitespace :: Parser ()
 whitespace = Lexer.space spaceConsumer singleLineComment multilineComment
-  where 
+  where
     spaceConsumer = void spaceChar
     singleLineComment = Lexer.skipLineComment "//"
     multilineComment = Lexer.skipBlockComment "(*" "*)"
@@ -83,7 +83,7 @@ hexLit :: Parser Int
 hexLit = fst . head . Numeric.readHex <$> (some hexDigitChar)
 
 hex :: Parser Int
-hex = symbol "$" *> hexLit    
+hex = symbol "$" *> hexLit
 
 integer :: Parser Int
 integer = lexeme $ hex <|> read <$> int
@@ -167,28 +167,25 @@ item = AST.Item <$> name <*> properties <* symbol' "end"
 typ :: Parser (Text, Maybe Int)
 typ = lexeme $ do
   void $ symbol ":"
-  n <- name  
+  n <- name
   i <- optional $ closed (symbol "[") integer (symbol "]")
   return (n, i)
 
 object :: Parser AST.Object
 object
-  =   AST.Object 
+  =   AST.Object
   <$> (symbol' "object" <|> symbol' "inherited" <|> symbol' "inline")
-  <*> name 
+  <*> name
   <*> optional typ
-  <*> many property 
-  <*> many object 
+  <*> many property
+  <*> many object
   <*  symbol' "end"
-
-dfm :: FilePath -> Parser AST.DFM
-dfm fileName = AST.DFM <$> pure fileName <*> object
 
 parseFile :: Parser p -> Parser p
 parseFile p = whitespace *> p <* eof
 
-parseDFM :: FilePath -> Text -> Either Text AST.DFM
+parseDFM :: FilePath -> Text -> Either Text AST.Object
 parseDFM fileName source
-  = case parse (parseFile $ dfm fileName) fileName source of 
+  = case parse (parseFile object) fileName source of
     Left  err -> Left . Text.pack $ parseErrorPretty err
     Right ast -> Right $ ast

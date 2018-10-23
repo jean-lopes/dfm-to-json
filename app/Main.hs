@@ -2,16 +2,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 module Main where
-import           Control.Monad (filterM)
+import qualified AST
+import           Control.Monad
+import           Control.Monad.Except
 import           Data.Aeson
 import           Data.Aeson.Encode.Pretty
-import qualified Data.ByteString.Lazy as ByteString
-import           Data.Char hiding (Format)
-import qualified Data.Text as Text
-import qualified Data.Text.IO as Text
+import qualified Data.ByteString.Lazy         as ByteString
+import           Data.Char                    hiding (Format)
+import           Data.Text                    (Text)
+import qualified Data.Text                    as Text
+import qualified Data.Text.IO                 as Text
 import           Data.Version
 import           Options.Applicative.Simple
 import           Parser
+import           Pipes
+import qualified Pipes.Prelude                as Pipes
 import           System.Directory
 import           System.FilePath
 import           Text.ParserCombinators.ReadP
@@ -26,79 +31,84 @@ data Args = Args
   , target :: FilePath
   } deriving Show
 
-config :: Config
-config = defConfig
-  { confCompare = keyOrder 
-    [ "file"
-    , "code"
-    , "kind"
-    , "name"
-    , "type"
-    , "index"
-    , "properties"
-    , "objects"
+baseConfig :: Config
+baseConfig = defConfig
+  { confCompare = keyOrder
+    [ "file", "code" , "kind"      , "name"
+    , "type", "index", "properties", "objects"
     ]
   }
 
-getConfig :: Layout -> Config
-getConfig Compact = config { confIndent = Spaces 0 }
-getConfig Format = config { confIndent = Spaces 2 }
+newConfig :: Layout -> Config
+newConfig Compact = baseConfig { confIndent = Spaces 0 }
+newConfig Format  = baseConfig { confIndent = Spaces 2 }
 
 version :: String
-version = $(simpleVersion (fst . last $ readP_to_S parseVersion CURRENT_PACKAGE_VERSION))
+version = $(simpleVersion $ fst . last $ readP_to_S parseVersion CURRENT_PACKAGE_VERSION)
 
 parseOptions :: IO (Args, ())
-parseOptions = simpleOptions
-  version
-  empty
+parseOptions = simpleOptions version empty
   "Converts a Delphi Form File (DFM) to JSON"
-  ( Args 
+  ( Args
     <$> flag Format Compact
-      (  long    "compact" 
-      <> short   'c' 
-      <> help    "Compact JSON output" )    
+      (  long    "compact"
+      <> short   'c'
+      <> help    "Compact JSON output" )
     <*> strArgument
-      (  help    "FILE or DIRECTORY for conversion" 
+      (  help    "FILE or DIRECTORY for conversion"
       <> metavar "PATH") )
   empty
 
-process :: Config -> FilePath -> IO ()
-process cfg file = do
-  Text.putStrLn $ "Reading: " `Text.append` (Text.pack file)
-  src <- Text.readFile file
-  case parseDFM file src of
-    Left err  -> Text.putStrLn err
-    Right ast -> writeJSON cfg (jsonPathFor file) ast
+isExt :: String -> FilePath -> Bool
+isExt ext = (=='.':ext) . map toLower . takeExtension
 
-jsonPathFor :: FilePath -> FilePath
-jsonPathFor dfmPath = replaceFileName dfmPath jsonFileName
-  where
-    fileName = dropExtension $ takeFileName dfmPath
-    jsonFileName = fileName <.> "json"
-
-paths :: FilePath -> IO [FilePath]
-paths input
-  =   canonicalizePath input 
-  >>= doesFileExist
-  >>= \isFile -> if isFile 
-    then return [input]
-    else listDirectory input 
-      >>= mapM (canonicalizePath . (input++))
-      >>= filterM isDFM
-
-isDFM :: FilePath -> IO Bool
-isDFM = return . (==".dfm") . map toLower . takeExtension
-
-writeJSON :: ToJSON a => Config -> FilePath -> a -> IO ()
-writeJSON cfg filePath obj
-  = ByteString.writeFile filePath
+writeJSON :: ToJSON a => Config -> (FilePath, a) -> IO ()
+writeJSON cfg (filePath, obj)
+  = ByteString.writeFile (filePath -<.> "json")
   . encodePretty' cfg
   . toJSON
   $ obj
 
+readDFM :: FilePath -> IO (FilePath, Text)
+readDFM p = do
+  Text.putStrLn . Text.pack $ "Reading: " ++ p
+  src <- Text.readFile p
+  return (p, src)
+
+paths :: FilePath -> Producer FilePath IO ()
+paths path = do
+  isFile <- lift $ doesFileExist path
+  if isFile
+    then yield path
+    else do
+      ps <- lift $ listDirectory path
+      mapM_ (paths . (path </>)) ps
+  return ()
+
+parse :: Pipe (FilePath, Text) (FilePath, AST.Object) IO ()
+parse = forever $ do
+  (path, src) <- await
+  case parseDFM path src of
+    Left  err -> lift $ Text.putStrLn err
+    Right ast -> yield (path, ast)
+
+process :: FilePath -> Config -> IO ()
+process tgt cfg = do
+  p <- canonicalizePath tgt
+  setCurrentDirectory p
+  runEffect
+    $   paths p
+    >-> Pipes.filter (isExt "dfm")
+    >-> Pipes.map (makeRelative p)
+    >-> Pipes.mapM readDFM
+    >-> parse
+    >-> Pipes.mapM_ (writeJSON cfg)
+
 main :: IO ()
 main = do
   (args, ()) <- parseOptions
-  let cfg = getConfig . layout $ args 
-  filePaths <- paths . target $ args
-  mapM_ (process cfg) filePaths
+  let cfg = newConfig . layout $ args
+      tgt = target args
+  if isValid tgt
+    then process tgt cfg
+    else putStrLn $ "Invalid path: " ++ tgt

@@ -1,37 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 module AST
 where
-import qualified Data.Aeson as Aeson
-import           Data.Aeson ((.=))
-import qualified Data.List.NonEmpty as NonEmpty
+import           Data.Aeson         ((.=))
+import qualified Data.Aeson         as Aeson
 import           Data.List.NonEmpty (NonEmpty)
-import qualified Data.Text as Text
-import           Data.Text (Text)
-
-data DFM = DFM 
-  { dfmName   :: FilePath
-  , dfmObject :: Object
-  } deriving Show
+import qualified Data.List.NonEmpty as NonEmpty
+import           Data.Text          (Text)
+import qualified Data.Text          as Text
 
 data Object = Object
-  { objectKind :: Text
-  , objectName :: Text
-  , objectType :: Maybe (Text, Maybe Int)
+  { objectKind       :: Text
+  , objectName       :: Text
+  , objectType       :: Maybe (Text, Maybe Int)
   , objectProperties :: [Property]
-  , objectObjects :: [Object]
+  , objectObjects    :: [Object]
   } deriving Show
 
 data Property = Property
-  { propertyName :: Text
+  { propertyName  :: Text
   , propertyValue :: Value
   } deriving Show
 
-data Item = Item 
-  { itemName :: Text
+data Item = Item
+  { itemName       :: Text
   , itemProperties :: NonEmpty Property
   } deriving Show
 
-data Value 
+data Value
   = Boolean Bool
   | Integer Int
   | Double Double
@@ -44,47 +39,41 @@ data Value
   | AngleBracket [Item]
   deriving Show
 
-instance Aeson.ToJSON DFM where
-  toJSON (DFM dfmPath obj)
-    = Aeson.object
-      [ "file" .= dfmPath
-      , "code" .= obj ]
-
 instance Aeson.ToJSON Object where
   toJSON (Object kind name typeName properties objects)
     = Aeson.object
       [ "kind"       .= kind
-      , "name"       .= name 
+      , "name"       .= name
       , "type"       .= fmap typeNameToJSON typeName
       , "properties" .= (object $ fmap toTuple properties)
       , "objects"    .= fmap Aeson.toJSON objects ]
 
 instance Aeson.ToJSON Item where
   toJSON (Item name properties)
-    = Aeson.object 
+    = Aeson.object
       [ "name" .= name
       , "properties" .=
-        ( object 
-        . NonEmpty.toList 
+        ( object
+        . NonEmpty.toList
         . fmap toTuple
-        ) properties 
+        ) properties
       ]
 
 instance Aeson.ToJSON Value where
-  toJSON (Boolean x) = Aeson.toJSON x
-  toJSON (Integer x) = Aeson.toJSON x
-  toJSON (Double x) = Aeson.toJSON x
-  toJSON (String x) = Aeson.toJSON x
-  toJSON (Name x) = Aeson.toJSON x
-  toJSON (Image x) = Aeson.toJSON x
+  toJSON (Boolean x)        = Aeson.toJSON x
+  toJSON (Integer x)        = Aeson.toJSON x
+  toJSON (Double x)         = Aeson.toJSON x
+  toJSON (String x)         = Aeson.toJSON x
+  toJSON (Name x)           = Aeson.toJSON x
+  toJSON (Image x)          = Aeson.toJSON x
   toJSON (SquareBracket xs) = Aeson.toJSON xs
-  toJSON (RoundBracket xs) = Aeson.toJSON xs
-  toJSON (CurlyBracket xs) = Aeson.toJSON xs
-  toJSON (AngleBracket xs) = Aeson.object [ "items" .= fmap Aeson.toJSON xs ] 
+  toJSON (RoundBracket xs)  = Aeson.toJSON xs
+  toJSON (CurlyBracket xs)  = Aeson.toJSON xs
+  toJSON (AngleBracket xs)  = Aeson.object [ "items" .= fmap Aeson.toJSON xs ]
 
 typeNameToJSON :: (Text, Maybe Int) -> Aeson.Value
 typeNameToJSON (name, maybeIndex)
-  = Aeson.object 
+  = Aeson.object
     [ "name"  .= name
     , "index" .= maybeIndex ]
 

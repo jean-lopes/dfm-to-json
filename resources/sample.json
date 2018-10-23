@@ -1,168 +1,81 @@
 {
-  "file": "resources\\sample.dfm",
-  "code": {
-    "kind": "object",
-    "name": "Form1",
-    "type": {
-      "name": "TForm1",
-      "index": null
-    },
-    "properties": {
-      "height": 224,
-      "font.name": "MS Sans Serif",
-      "cursor": "crHourGlass",
-      "font.style": [],
-      "textheight": 13,
-      "color": "clBtnFace",
-      "oldcreateorder": false,
-      "pixelsperinch": 96,
-      "font.color": "clWindowText",
-      "left": 192,
-      "width": 463,
-      "caption": "Form1",
-      "font.charset": "DEFAULT_CHARSET",
-      "font.height": -11,
-      "top": 107
-    },
-    "objects": [
-      {
-        "kind": "object",
-        "name": "Image1",
-        "type": {
-          "name": "TImage",
-          "index": null
-        },
-        "properties": {
-          "height": 89,
-          "picture.data": "07544269746D617036550000424D365500000000000036000000280000005500000055000000010018000000000000550000C40E0000C40E0000000000000000",
-          "left": 240,
-          "width": 97,
-          "top": 104
-        },
-        "objects": []
+  "kind": "object",
+  "name": "Form1",
+  "type": {
+    "name": "TForm1",
+    "index": null
+  },
+  "properties": {
+    "font.name": "MS Sans Serif",
+    "font.style": [],
+    "left": 192
+  },
+  "objects": [
+    {
+      "kind": "object",
+      "name": "Image1",
+      "type": {
+        "name": "TImage",
+        "index": null
       },
-      {
-        "kind": "object",
-        "name": "ListBox1",
-        "type": {
-          "name": "TListBox",
-          "index": null
-        },
-        "properties": {
-          "height": 73,
-          "color": 8454143,
-          "left": 8,
-          "width": 217,
-          "taborder": 1,
-          "itemheight": 13,
-          "top": 8,
-          "items.strings": [
-            "this is string.and another one...and another one...now with apostrophe '\r\neven with control characters \u0007\tmixed in the string"
+      "properties": {
+        "picture.data": "07544269746D617036550000424D365500000000000036000000280000005500000055000000010018000000000000550000C40E0000C40E0000000000000000"
+      },
+      "objects": []
+    },
+    {
+      "kind": "object",
+      "name": "ListBox1",
+      "type": {
+        "name": "TListBox",
+        "index": null
+      },
+      "properties": {
+        "items.strings": [
+          "this is string.and another one...and another one...now with apostrophe '\r\neven with control characters \u0007\tmixed in the string"
+        ]
+      },
+      "objects": []
+    },
+    {
+      "kind": "object",
+      "name": "DBGrid1",
+      "type": {
+        "name": "TDBGrid",
+        "index": null
+      },
+      "properties": {
+        "columns": {
+          "items": [
+            {
+              "name": "item",
+              "properties": {
+                "expanded": false,
+                "visible": true
+              }
+            },
+            {
+              "name": "item",
+              "properties": {
+                "expanded": false,
+                "visible": true
+              }
+            }
           ]
         },
-        "objects": []
-      },
-      {
-        "kind": "object",
-        "name": "DBGrid1",
-        "type": {
-          "name": "TDBGrid",
-          "index": null
-        },
-        "properties": {
-          "height": 89,
-          "titlefont.charset": "DEFAULT_CHARSET",
-          "titlefont.height": -11,
-          "left": 240,
-          "width": 209,
-          "taborder": 0,
-          "titlefont.name": "MS Sans Serif",
-          "titlefont.style": [],
-          "columns": {
-            "items": [
-              {
-                "name": "item",
-                "properties": {
-                  "expanded": false,
-                  "visible": true
-                }
-              },
-              {
-                "name": "item",
-                "properties": {
-                  "expanded": false,
-                  "visible": true
-                }
-              }
-            ]
-          },
-          "options": [
-            "dgTitles",
-            "dgIndicator",
-            "dgColumnResize",
-            "dgColLines",
-            "dgRowLines",
-            "dgTabs",
-            "dgRowSelect",
-            "dgConfirmDelete",
-            "dgCancelOnExit"
-          ],
-          "titlefont.color": "clWindowText",
-          "top": 8
-        },
-        "objects": []
-      },
-      {
-        "kind": "object",
-        "name": "Panel1",
-        "type": {
-          "name": "TPanel",
-          "index": null
-        },
-        "properties": {
-          "height": 57,
-          "left": 8,
-          "width": 145,
-          "taborder": 2,
-          "top": 104
-        },
-        "objects": [
-          {
-            "kind": "object",
-            "name": "CheckBox1",
-            "type": {
-              "name": "TCheckBox",
-              "index": null
-            },
-            "properties": {
-              "height": 17,
-              "left": 8,
-              "width": 97,
-              "caption": "CheckBox1",
-              "taborder": 0,
-              "top": 8
-            },
-            "objects": []
-          },
-          {
-            "kind": "object",
-            "name": "CheckBox2",
-            "type": {
-              "name": "TCheckBox",
-              "index": null
-            },
-            "properties": {
-              "height": 17,
-              "left": 8,
-              "width": 97,
-              "caption": "CheckBox2",
-              "taborder": 1,
-              "top": 32
-            },
-            "objects": []
-          }
+        "options": [
+          "dgTitles",
+          "dgIndicator",
+          "dgColumnResize",
+          "dgColLines",
+          "dgRowLines",
+          "dgTabs",
+          "dgRowSelect",
+          "dgConfirmDelete",
+          "dgCancelOnExit"
         ]
-      }
-    ]
-  }
+      },
+      "objects": []
+    }
+  ]
 }
