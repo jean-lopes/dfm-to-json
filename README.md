@@ -4,6 +4,10 @@ Convert a DFM to JSON, for more information issue --help command
 
 You can download the [latest release here](https://github.com/jean-lopes/dfm-to-json/releases/latest).
 
+You can check the grammar (EBNF) [here](https://jean-lopes.github.io/dfm-to-json/).
+
+## Example
+
 Consider this DFM [sample.dfm](resources/sample.dfm):
 ```pascal
 object Form1: TForm1
@@ -43,11 +47,9 @@ Executing the command:
 ```bash
 $ dfm-to-json resources/sample.dfm
 ```
-<<<<<<< HEAD
+
 produces the following [JSON](resources/sample.dfm):
-=======
-produces the following [resources/snippet.json](resources/snippet.json):
->>>>>>> 8c2892899d8c344625981d90401a1b48f981e96b
+
 ```json
 object Form1: TForm1
   Left = 192
