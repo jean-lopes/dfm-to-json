@@ -10,8 +10,6 @@ property = qualified-name, '=', value;
 
 comma-values = value, { ',', value };
 
-plus-values = value, { [ '+' ], value };
-
 values = value, { value };
 
 type-name = name, [ '[', natural, ']' ];
@@ -26,7 +24,7 @@ value
   | string
   | qualified-name
   | '[', [ comma-values ], ']'
-  | '(', [ plus-values ], ')'
+  | '(', { single-string }, ')'
   | '{', values, '}'
   | '<', { item }, '>'
   ;
