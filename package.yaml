@@ -1,10 +1,10 @@
 name:                dfm-to-json
-version:             0.1.1.0
+version:             1.0.0.0
 github:              "jean-lopes/dfm-to-json"
 license:             BSD3
 author:              "Jean Carlo Giambastiani Lopes"
 maintainer:          "author[0] `dot` author[3] `at` hotmail `dot` com `dot` br"
-copyright:           "2018 Jean Carlo Giambastiani Lopes"
+copyright:           "2019 Jean Carlo Giambastiani Lopes"
 
 extra-source-files:
 - README.md

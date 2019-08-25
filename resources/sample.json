@@ -32,7 +32,12 @@
       },
       "properties": {
         "items.strings": [
-          "this is string.and another one...and another one...now with apostrophe '\r\neven with control characters \u0007\tmixed in the string"
+          "this is string.",
+          "and another one...",
+          "now with apostrophe '",
+          "even with control characters ",
+          "\u0007\t",
+          "mixed in the string"
         ]
       },
       "objects": []

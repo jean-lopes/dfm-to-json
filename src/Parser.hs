@@ -130,8 +130,7 @@ squareBracket = AST.SquareBracket <$> closed (symbol "[") values (symbol "]")
 roundBracket :: Parser AST.Value
 roundBracket = AST.RoundBracket <$> closed (symbol "(") values (symbol ")")
   where
-    values = value `sepBy` plus
-    plus = symbol "+"
+    values = fmap AST.String <$> many sglStr
 
 curlyBracket :: Parser AST.Value
 curlyBracket = closed (symbol "{") (try image <|> values) (symbol "}")
@@ -187,5 +186,5 @@ parseFile p = whitespace *> p <* eof
 parseDFM :: FilePath -> Text -> Either Text AST.Object
 parseDFM fileName source
   = case parse (parseFile object) fileName source of
-    Left  err -> Left . Text.pack $ parseErrorPretty err
+    Left  err -> Left . Text.pack $ errorBundlePretty err
     Right ast -> Right $ ast

@@ -9,13 +9,11 @@ object Form1: TForm1
     }
   end
   object ListBox1: TListBox
-    Items.Strings = 
-      ( 'this is string.' 
-      + 'and another one...'
-      + 'and another one...'
-      + 'now with apostrophe '''#13#10
-      + 'even with control characters '#7#9'mixed in the string'
-      )
+    Items.Strings = (
+      'this is string.' 
+      'and another one...'
+      'now with apostrophe '''
+      'even with control characters '#7#9'mixed in the string')
   end
   object DBGrid1: TDBGrid
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]

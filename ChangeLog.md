@@ -1,5 +1,9 @@
 # Changelog for dfm-parser
 
+## 1.0.0.0
+- Fixed Issue #1: items.strings not separeting strings
+- Updated stackage to lts-14.2
+
 ## 0.1.1.0
 - The search for `DFM` files is now recursive.
 

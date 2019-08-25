@@ -1,24 +1,25 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 41bb6c0a3549d8948f359c232a9f521f39eaf3b54ca068678df36e3d440ce6ba
+-- hash: e9d30c587cce073d8978f95ba182e0b22f729d599ef9a3b6f68c4becd3ef6892
 
 name:           dfm-to-json
-version:        0.1.1.0
+version:        1.0.0.0
 description:    Please see the README on GitHub at <https://github.com/jean-lopes/dfm-to-json#readme>
 homepage:       https://github.com/jean-lopes/dfm-to-json#readme
 bug-reports:    https://github.com/jean-lopes/dfm-to-json/issues
 author:         Jean Carlo Giambastiani Lopes
 maintainer:     author[0] `dot` author[3] `at` hotmail `dot` com `dot` br
-copyright:      2018 Jean Carlo Giambastiani Lopes
+copyright:      2019 Jean Carlo Giambastiani Lopes
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 1.10
 extra-source-files:
-    ChangeLog.md
     README.md
+    ChangeLog.md
 
 source-repository head
   type: git
